@@ -1,0 +1,12 @@
+{
+    "@@locale": "ko",
+    "alltasks" : "모든 작업",
+    "todaytask" : "오늘의 작업",
+    "setting" : "설정",
+    "edit" : "편집",
+    "delete" : "삭제",
+    "light" : "라이트",
+    "dark" : "다크",
+    "language" : "언어",
+    "todolist" : "할 일 목록"
+}

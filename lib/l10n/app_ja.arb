@@ -1,0 +1,12 @@
+{
+    "@@locale": "ja",
+    "alltasks" : "すべてのタスク",
+    "todaytask" : "今日のタスク",
+    "setting" : "設定",
+    "edit" : "編集",
+    "delete" : "削除",
+    "light" : "ライト",
+    "dark" : "ダーク",
+    "language" : "言語",
+    "todolist" : "やることリスト"
+}
