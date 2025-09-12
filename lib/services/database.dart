@@ -5,14 +5,17 @@ class DatabaseMethod {
   addToDoList(Map<String,dynamic> listinfo,String id)async{
     try{
         await FirebaseFirestore.instance.collection("List").doc(id).set(listinfo);
+        // ignore: avoid_print
         print('List Added Successfully');
     }catch (e){
+        // ignore: avoid_print
         print('Error : $e');
     }
   }
 
  getLists()async{
   String uid = FirebaseAuth.instance.currentUser!.uid;
+    // ignore: await_only_futures
     return await FirebaseFirestore.instance.collection("List").where("UserId",isEqualTo: uid).snapshots();
   }
 

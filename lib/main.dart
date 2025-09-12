@@ -7,7 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_localizations/flutter_localizations.dart';
 // import 'l10n/app_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -23,6 +22,7 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     final appThemeState = ref.watch(appThemeStateNotifier);
+    // ignore: non_constant_identifier_names
     final Language = ref.watch(LanguageProvider);
     return GetMaterialApp(
       title: 'Firebase Test',

@@ -8,5 +8,10 @@
     "light" : "ライト",
     "dark" : "ダーク",
     "language" : "言語",
-    "todolist" : "やることリスト"
+    "todolist" : "やることリスト",
+    "editform" : "リスト編集フォーム",
+    "reqtitle" : "タイトルを入力してください",
+    "reqcontent" : "内容を入力してください",
+    "reqdate" : "日付を選択してください",
+    "save" : "保存"
 }

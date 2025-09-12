@@ -119,7 +119,12 @@ login() async {
               ),
               Container(
               margin: EdgeInsets.only(top: 20),
-              child: IconButton(onPressed: (()=>login()), icon: FaIcon(FontAwesomeIcons.google,color: Colors.red,))
+              child: TextButton.icon(
+                onPressed: (()=>login()), 
+                icon: FaIcon(FontAwesomeIcons.google,color: Colors.red,
+                ),
+                label: Text('Sign in with Google'),
+                )
               ),
           ],
         ),
