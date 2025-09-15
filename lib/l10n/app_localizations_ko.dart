@@ -34,4 +34,19 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get todolist => '할 일 목록';
+
+  @override
+  String get editform => '리스트 편집 폼';
+
+  @override
+  String get reqtitle => '제목을 입력하세요';
+
+  @override
+  String get reqcontent => '내용을 입력하세요';
+
+  @override
+  String get reqdate => '날짜를 선택하세요';
+
+  @override
+  String get save => '저장';
 }

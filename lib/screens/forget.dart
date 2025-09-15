@@ -16,10 +16,12 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   reset()async{
     try{
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email.text.trim());
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Email Sent to change your password ✅ '),margin: EdgeInsets.all(20),padding: EdgeInsets.all(20),behavior: SnackBarBehavior.floating,) 
     );
     }catch(e){
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Error : $e ❌'),margin: EdgeInsets.all(20),padding: EdgeInsets.all(20),behavior: SnackBarBehavior.floating,) 
     );

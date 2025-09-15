@@ -1,5 +1,10 @@
+// ignore_for_file: non_constant_identifier_names, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, duplicate_ignore
+
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coffee_shop/l10n/app_localizations.dart';
+import 'package:coffee_shop/img_pick.dart';
+// import 'package:coffee_shop/l10n/app_localizations.dart';
 import 'package:coffee_shop/language.dart';
 import 'package:coffee_shop/providers/theme_provider.dart';
 import 'package:coffee_shop/services/database.dart';
@@ -7,6 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:random_string/random_string.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -21,6 +27,7 @@ class _HomeState extends ConsumerState<Home> {
   TextEditingController title = TextEditingController();
   TextEditingController content = TextEditingController();
   TextEditingController date = TextEditingController();
+  
 
     DateTime? selectedDate;
 
@@ -64,6 +71,7 @@ class _HomeState extends ConsumerState<Home> {
   }
    
    Widget allList(){
+    final localizations = ref.read(appLocalizationsProvider);
     return StreamBuilder(stream: ListStream, builder: (context,AsyncSnapshot snapshot){
       if(!snapshot.hasData) return Container();
       var userAuth = snapshot.data.docs.where((doc)=> doc["UserId"]==user!.uid).toList();
@@ -103,11 +111,11 @@ class _HomeState extends ConsumerState<Home> {
                               children: [
                                 Column(
                                   children: [
-                                    Container(
+                                    SizedBox(
                                       width: 180,
                                       child: Text('${ds["Title"]}',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,),softWrap: true,overflow: TextOverflow.visible,maxLines: null,)
                                       ),
-                                    Container(
+                                    SizedBox(
                                       width: 180,
                                       child: Text('${ds["Content"]}',style: TextStyle(fontSize: 20),softWrap: true,overflow: TextOverflow.visible,maxLines: null,)
                                       ),
@@ -120,14 +128,15 @@ class _HomeState extends ConsumerState<Home> {
                                         EditList(ds["Id"]);
                                       }, child: Row(
                                         children: [
-                                          Text(AppLocalizations.of(context)!.edit),
+                                          Text(localizations.edit),
                                           SizedBox(width: 5),
                                           Icon(Icons.edit)
                                         ],
                                       ),),
+                                      // ignore: sort_child_properties_last
                                       ElevatedButton(onPressed: (){FirebaseFirestore.instance.collection("List").doc(ds["Id"]).delete();}, child: Row(
                                         children: [
-                                          Text(AppLocalizations.of(context)!.delete,style: TextStyle(color: Colors.white),),
+                                          Text(localizations.delete,style: TextStyle(color: Colors.white),),
                                           SizedBox(width: 5),
                                           Icon(Icons.delete,color: Colors.white,)
                                         ],
@@ -148,6 +157,7 @@ class _HomeState extends ConsumerState<Home> {
    }
 
    Widget todayList() {
+    final localizations = ref.read(appLocalizationsProvider);
   return StreamBuilder(
     stream: ListStream,
     builder: (context, AsyncSnapshot snapshot) {
@@ -212,7 +222,7 @@ class _HomeState extends ConsumerState<Home> {
                             Column(
                               
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 180,
                                   child: Text(
                                     '${ds["Title"]}',
@@ -225,7 +235,7 @@ class _HomeState extends ConsumerState<Home> {
                                     maxLines: null,
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   width: 180,
                                   child: Text(
                                     '${ds["Content"]}',
@@ -249,7 +259,7 @@ class _HomeState extends ConsumerState<Home> {
                                   },
                                   child: Row(
                                     children: [
-                                      Text(AppLocalizations.of(context)!.edit),
+                                      Text(localizations.edit),
                                       SizedBox(width: 5),
                                       Icon(Icons.edit)
                                     ],
@@ -262,9 +272,10 @@ class _HomeState extends ConsumerState<Home> {
                                         .doc(ds["Id"])
                                         .delete();
                                   },
+                                  // ignore: sort_child_properties_last
                                   child: Row(
                                     children: [
-                                      Text(AppLocalizations.of(context)!.delete,style: TextStyle(color: Colors.white),),
+                                      Text(localizations.delete,style: TextStyle(color: Colors.white),),
                                       SizedBox(width: 5),
                                       Icon(Icons.delete,color: Colors.white,)
                                     ],
@@ -295,12 +306,13 @@ class _HomeState extends ConsumerState<Home> {
   Widget build(BuildContext context) {
     final appThemeState = ref.watch(appThemeStateNotifier);
     final selectedLanguage = ref.watch(LanguageProvider);
+    final localizations = ref.read(appLocalizationsProvider);
+    User? user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.todolist,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),actions: [Container(padding: EdgeInsets.only(right: 10.0), child: Row(
+      appBar: AppBar(title: Text(localizations.todolist,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),actions: [Container(padding: EdgeInsets.only(right: 10.0), child: Row(
         children: [
-          Icon(Icons.person),
-          Text('${user?.displayName}'),
+          TextButton.icon(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));},icon: Icon(Icons.person), label: Text('${user?.displayName}')),
           IconButton(onPressed: () => signOut(), icon: Icon(Icons.logout_rounded))
         ],
       ))],
@@ -316,15 +328,15 @@ class _HomeState extends ConsumerState<Home> {
         destinations: <Widget>[
           NavigationDestination( 
               icon: Badge(child: Icon(Icons.task),), 
-              label: AppLocalizations.of(context)!.alltasks,
+              label: localizations.alltasks,
             ),
             NavigationDestination(
               icon: Badge(child: Icon(Icons.today),),
-              label: AppLocalizations.of(context)!.todaytask
+              label: localizations.todaytask
               ),
              NavigationDestination(
               icon: Icon(Icons.settings),
-              label: AppLocalizations.of(context)!.setting
+              label: localizations.setting
               ),
         ]
       ),
@@ -333,7 +345,7 @@ class _HomeState extends ConsumerState<Home> {
           padding: EdgeInsets.all(20.0),
           child: Column(
             children: [
-              Text(AppLocalizations.of(context)!.alltasks,style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+              Text(localizations.alltasks,style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
               Expanded(child: allList())
             ],
           ),
@@ -342,7 +354,7 @@ class _HomeState extends ConsumerState<Home> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              Text(AppLocalizations.of(context)!.todaytask,style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+              Text(localizations.todaytask,style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
               Expanded(child: todayList())
             ],
           ),
@@ -351,10 +363,10 @@ class _HomeState extends ConsumerState<Home> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              Text(AppLocalizations.of(context)!.setting,style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+              Text(localizations.setting,style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
               Row(
                 children: [
-                  Text(AppLocalizations.of(context)!.light),
+                  Text(localizations.light),
                   Switch(
                     value: appThemeState.isDarkModeEnabled, 
                     onChanged: (enable){
@@ -365,12 +377,12 @@ class _HomeState extends ConsumerState<Home> {
                       }
                     }
                     ),
-                    Text(AppLocalizations.of(context)!.dark)
+                    Text(localizations.dark)
                 ],
               ),
              Row(
               children: [
-                Text(AppLocalizations.of(context)!.language),
+                Text(localizations.language),
                 SizedBox(width: 30,),
                  DropdownButton<Language>(
                   value: selectedLanguage,
@@ -406,17 +418,19 @@ class _HomeState extends ConsumerState<Home> {
   }
 
   EditList(String id)async{ 
+    final localizations = ref.read(appLocalizationsProvider);
     DocumentSnapshot ds = await FirebaseFirestore.instance.collection("List").doc(id).get();
     title.text = ds["Title"];
     content.text = ds["Content"];
     date.text = ds["Date"];
   showDialog(
+  // ignore: use_build_context_synchronously
   context: context,
   builder: (context) => AlertDialog(
     title: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('Edit List Form', style: TextStyle(fontSize: 24, color: Colors.brown)),
+        Text(localizations.editform, style: TextStyle(fontSize: 24)),
         GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Icon(Icons.cancel),
@@ -431,7 +445,7 @@ class _HomeState extends ConsumerState<Home> {
           TextField(
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Enter Title...',
+              labelText: localizations.reqtitle,
             ),
             controller: title,
           ),
@@ -439,7 +453,7 @@ class _HomeState extends ConsumerState<Home> {
           TextField(
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Enter Content...',
+              labelText: localizations.reqcontent,
             ),
             controller: content,
           ),
@@ -447,7 +461,7 @@ class _HomeState extends ConsumerState<Home> {
           TextField(
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Pick Date...',
+              labelText: localizations.reqdate,
               icon: Icon(Icons.calendar_today),
             ),
             controller: date,
@@ -468,11 +482,271 @@ class _HomeState extends ConsumerState<Home> {
           });
           Navigator.pop(context);
         },
-        child: Text("Save"),
+        child: Text(localizations.save),
       ),
     ],
   ),
 );
+}
+}
+
+class Profile extends StatefulWidget {
+  const Profile({super.key});
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+final user = FirebaseAuth.instance.currentUser;
+
+class _ProfileState extends State<Profile> {
+
+  Uint8List? _image;
+
+  void selectedImage() async{
+  Uint8List? img = await pickImage(ImageSource.gallery);
+  if(img != null){
+    setState(() {
+      _image = img;
+    });
+  }
+  Navigator.pop(context);
+}
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Your Profile',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),),
+      body: Column(
+        children: [
+          Column(
+            children: [
+              Stack(
+                children: [
+                  _image != null?
+                  CircleAvatar(
+                    radius: 64,
+                    backgroundImage: MemoryImage(_image!),
+                  ):
+                  const CircleAvatar(
+                  radius: 64,
+                  backgroundImage: AssetImage('assets/profile.jpg'),
+                  ),
+                  Positioned(
+                    bottom: -10,
+                     right: 0,
+                    child: IconButton(
+                      onPressed: (){
+                        showDialog(
+                          context: context, 
+                          builder: (BuildContext context){
+                            return AlertDialog(
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Choose option'),
+                                  GestureDetector(
+                                    onTap: () => Navigator.pop(context),
+                                    child: Icon(Icons.cancel),
+                                  )
+                                ],
+                              ),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: (){
+                                    selectedImage();
+                                  }, 
+                                  child: Text('Upload from device')),
+                                  ElevatedButton(
+                                    onPressed: () async{
+                                        Uint8List? img = await pickImage(ImageSource.camera);
+                                        if(img != null){
+                                          setState(() {
+                                            _image = img;
+                                          });
+                                      }
+                                       Navigator.pop(context);
+                                    }, 
+                                    child: Text('Take a photo'))
+                              ],
+                            );
+                          });
+                      }, 
+                      icon: Icon(Icons.camera_enhance)
+                     ),
+                  ),
+                ]
+              ),
+              Text('Your Profile')
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Text('Your Name : ',style: TextStyle(fontWeight: FontWeight.bold),),
+                Text('${user?.displayName}',style: TextStyle(fontWeight: FontWeight.bold,color: const Color(0xFF3606F5)),),
+                IconButton(onPressed: () => EditName(), icon: Icon(Icons.edit))
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Text('Your Email : ',style: TextStyle(fontWeight: FontWeight.bold),),
+                Text('${user?.email}',style: TextStyle(fontWeight: FontWeight.bold,color: const Color(0xFF3606F5)),),
+                IconButton(onPressed: () => EditEmail(), icon: Icon(Icons.edit))
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Text('Your Password : ',style: TextStyle(fontWeight: FontWeight.bold),),
+                Text('********',style: TextStyle(fontWeight: FontWeight.bold,color: const Color(0xFF3606F5)),),
+                IconButton(onPressed: () {
+                  if (user?.email != null) {
+                  FirebaseAuth.instance.sendPasswordResetEmail(email: user!.email!).then((_){
+                    // ignore: use_build_context_synchronously
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Email Sent to ${user?.email}! Please check your email and change your password!'),backgroundColor: Colors.lightGreen,)
+                    );
+                  }).catchError((e) {
+                    // ignore: use_build_context_synchronously
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error found : ${e.toString()}'),backgroundColor: Colors.red,)
+                    );
+                  });
+                  }}, icon: Icon(Icons.edit))
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+User? user = FirebaseAuth.instance.currentUser;
+EditName() async{
+  // ignore: no_leading_underscores_for_local_identifiers
+  final TextEditingController _nameController =
+      TextEditingController(text: user?.displayName ?? "");
+  showDialog(
+  context: context,
+  builder: (context) => AlertDialog(
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text('Update Your Name', style: TextStyle(fontSize: 20)),
+        GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Icon(Icons.cancel),
+        ),
+      ],
+    ),
+    content: SingleChildScrollView(
+      child: Column(
+         mainAxisSize: MainAxisSize.min, 
+        children: [
+          SizedBox(height: 10),
+          TextField(
+            controller: _nameController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Enter New Name',
+            ), 
+          ),
+        ]
+      ),
+    ),
+     actions: [
+      ElevatedButton(
+        onPressed: () {
+          if (user != null && _nameController.text.isNotEmpty) {
+                   user?.updateDisplayName(_nameController.text.trim()); 
+                   setState(() {
+                      user = FirebaseAuth.instance.currentUser;
+                   });
+                   user?.reload();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Name updated successfully!"),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+          Navigator.pop(context);
+          }
+        },
+        child: Text('Save'),
+      ),
+    ],
+  ));
+}
+
+
+EditEmail(){
+  final TextEditingController _emailController =
+      TextEditingController(text: user?.email ?? "");
+  showDialog(
+  context: context,
+  builder: (context) => AlertDialog(
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text('Update Your Email', style: TextStyle(fontSize: 20)),
+        GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Icon(Icons.cancel),
+        ),
+      ],
+    ),
+    content: SingleChildScrollView(
+      child: Column(
+         mainAxisSize: MainAxisSize.min, 
+        children: [
+          SizedBox(height: 10),
+          TextField(
+            controller: _emailController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Enter New Email',
+            ), 
+          ),
+        ]
+      ),
+    ),
+     actions: [
+      ElevatedButton(
+        onPressed: () {
+          if (user != null && _emailController.text.isNotEmpty) {
+            user!.verifyBeforeUpdateEmail(_emailController.text.trim()).then((_){
+            setState(() {
+              user = FirebaseAuth.instance.currentUser;
+            });
+            user?.reload();
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Verification email sent to ${_emailController.text}"),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context);
+            }).catchError((e){
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error : ${e.toString()}'),
+              backgroundColor: Colors.red,
+              )
+            );
+            });     
+          }
+        },
+        child: Text('Save'),
+      ),
+    ],
+  ));
 }
 }
 
@@ -510,6 +784,10 @@ class _ListFormState extends State<ListForm> {
 
   @override
   Widget build(BuildContext context) {
+     return Consumer(
+      builder: (context, ref, child) {
+        final localizations = ref.watch(appLocalizationsProvider);
+        
    return Scaffold(
       appBar: AppBar(title: Row(
         children: [
@@ -523,21 +801,21 @@ class _ListFormState extends State<ListForm> {
             Container(
                 margin: EdgeInsets.only(top: 10.0),
                 child: TextField(
-                  decoration: InputDecoration(border: OutlineInputBorder(),labelText: 'Enter Title....'),
+                  decoration: InputDecoration(border: OutlineInputBorder(),labelText: localizations.reqtitle),
                   controller: title,
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(top: 30.0),
                 child: TextField(
-                  decoration: InputDecoration(border: OutlineInputBorder(),labelText: 'Enter Content....'),
+                  decoration: InputDecoration(border: OutlineInputBorder(),labelText: localizations.reqcontent),
                   controller: content,
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(top: 30.0),
                 child: TextField(
-                  decoration: InputDecoration(border: OutlineInputBorder(),labelText: 'Pick Date....',icon: Icon(Icons.calendar_today)),
+                  decoration: InputDecoration(border: OutlineInputBorder(),labelText: localizations.reqdate,icon: Icon(Icons.calendar_today)),
                   controller: date,
                   onTap: () => pickDate(context),
                 ),
@@ -557,6 +835,7 @@ class _ListFormState extends State<ListForm> {
                         "isChecked" : false
                       };
                       await DatabaseMethod().addToDoList(listinfo, Id).then(Get.snackbar('List Add Successful ✅',' ',backgroundColor: Colors.green.shade300,));
+                      // Navigator.pop(context);
                     }, 
                     child: Text('Add',style: TextStyle(fontSize: 20)))),
                 ],
@@ -564,7 +843,10 @@ class _ListFormState extends State<ListForm> {
               
           ],
         ),
+      
       ),
+    );
+  }
     );
   }
 }

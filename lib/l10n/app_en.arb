@@ -8,5 +8,10 @@
     "light" : "Light",
     "dark" : "Dark",
     "language" : "Language",
-    "todolist" : "To Do List"
+    "todolist" : "To Do List",
+    "editform" : "Edit List Form",
+    "reqtitle" : "Enter Title",
+    "reqcontent" : "Enter Content",
+    "reqdate" : "Pick Date",
+    "save" : "Save"
 }

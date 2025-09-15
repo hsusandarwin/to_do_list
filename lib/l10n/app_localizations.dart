@@ -155,6 +155,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'To Do List'**
   String get todolist;
+
+  /// No description provided for @editform.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit List Form'**
+  String get editform;
+
+  /// No description provided for @reqtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Title'**
+  String get reqtitle;
+
+  /// No description provided for @reqcontent.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Content'**
+  String get reqcontent;
+
+  /// No description provided for @reqdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick Date'**
+  String get reqdate;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
 }
 
 class _AppLocalizationsDelegate

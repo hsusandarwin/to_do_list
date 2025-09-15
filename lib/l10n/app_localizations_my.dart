@@ -34,4 +34,19 @@ class AppLocalizationsMy extends AppLocalizations {
 
   @override
   String get todolist => 'လုပ်ရန်စာရင်း';
+
+  @override
+  String get editform => 'စာရင်းတည်းဖြတ်ပုံစံ';
+
+  @override
+  String get reqtitle => 'ခေါင်းစဥ်ထည့်ပါ';
+
+  @override
+  String get reqcontent => 'အကြောင်းအရာထည့်ပါ';
+
+  @override
+  String get reqdate => 'နေ့စွဲရွေးချယ်ပါ';
+
+  @override
+  String get save => 'သိမ်းမည်';
 }

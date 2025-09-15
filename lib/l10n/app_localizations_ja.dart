@@ -34,4 +34,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get todolist => 'やることリスト';
+
+  @override
+  String get editform => 'リスト編集フォーム';
+
+  @override
+  String get reqtitle => 'タイトルを入力してください';
+
+  @override
+  String get reqcontent => '内容を入力してください';
+
+  @override
+  String get reqdate => '日付を選択してください';
+
+  @override
+  String get save => '保存';
 }

@@ -34,4 +34,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get todolist => 'To Do List';
+
+  @override
+  String get editform => 'Edit List Form';
+
+  @override
+  String get reqtitle => 'Enter Title';
+
+  @override
+  String get reqcontent => 'Enter Content';
+
+  @override
+  String get reqdate => 'Pick Date';
+
+  @override
+  String get save => 'Save';
 }
