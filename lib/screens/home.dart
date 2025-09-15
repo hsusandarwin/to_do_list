@@ -1,6 +1,9 @@
 // ignore_for_file: non_constant_identifier_names, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, duplicate_ignore
 
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coffee_shop/img_pick.dart';
 // import 'package:coffee_shop/l10n/app_localizations.dart';
 import 'package:coffee_shop/language.dart';
 import 'package:coffee_shop/providers/theme_provider.dart';
@@ -9,6 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:random_string/random_string.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -496,12 +500,86 @@ class Profile extends StatefulWidget {
 final user = FirebaseAuth.instance.currentUser;
 
 class _ProfileState extends State<Profile> {
+
+  Uint8List? _image;
+
+  void selectedImage() async{
+  Uint8List? img = await pickImage(ImageSource.gallery);
+  if(img != null){
+    setState(() {
+      _image = img;
+    });
+  }
+  Navigator.pop(context);
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Your Profile',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),),
       body: Column(
         children: [
+          Column(
+            children: [
+              Stack(
+                children: [
+                  _image != null?
+                  CircleAvatar(
+                    radius: 64,
+                    backgroundImage: MemoryImage(_image!),
+                  ):
+                  const CircleAvatar(
+                  radius: 64,
+                  backgroundImage: AssetImage('assets/profile.jpg'),
+                  ),
+                  Positioned(
+                    bottom: -10,
+                     right: 0,
+                    child: IconButton(
+                      onPressed: (){
+                        showDialog(
+                          context: context, 
+                          builder: (BuildContext context){
+                            return AlertDialog(
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Choose option'),
+                                  GestureDetector(
+                                    onTap: () => Navigator.pop(context),
+                                    child: Icon(Icons.cancel),
+                                  )
+                                ],
+                              ),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: (){
+                                    selectedImage();
+                                  }, 
+                                  child: Text('Upload from device')),
+                                  ElevatedButton(
+                                    onPressed: () async{
+                                        Uint8List? img = await pickImage(ImageSource.camera);
+                                        if(img != null){
+                                          setState(() {
+                                            _image = img;
+                                          });
+                                      }
+                                       Navigator.pop(context);
+                                    }, 
+                                    child: Text('Take a photo'))
+                              ],
+                            );
+                          });
+                      }, 
+                      icon: Icon(Icons.camera_enhance)
+                     ),
+                  ),
+                ]
+              ),
+              Text('Your Profile')
+            ],
+          ),
           Container(
             padding: EdgeInsets.all(20),
             child: Row(

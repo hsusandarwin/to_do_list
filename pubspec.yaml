@@ -45,9 +45,11 @@ dependencies:
   random_string: ^2.3.1
   flutter_hooks: ^0.21.3+1
   hooks_riverpod: ^2.6.1
+  image_picker: ^1.2.0
   flutter_localizations:
     sdk: flutter
   intl: any
+  camera: ^0.11.2
  
 
 dev_dependencies:
@@ -74,6 +76,7 @@ flutter:
       - assets/coffee/coffee_1.png
       - assets/coffee/coffee_2.png
       - assets/coffee/coffee_3.png
+      - assets/profile.jpg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
